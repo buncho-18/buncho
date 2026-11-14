@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { SITE_URL } from '@/lib/seo';
 import { docHref } from '@/lib/categories';
+import { getAllExperiences } from '@/lib/interview-experiences';
 
 // Rebuilt at most once an hour, so new problems show up without hitting the database on every crawl.
 export const revalidate = 3600;
@@ -16,6 +17,13 @@ export default async function sitemap() {
     { url: `${SITE_URL}/problems`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${SITE_URL}/problems/hr`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/problems/sql`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/interview-experiences`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    ...getAllExperiences().map((e) => ({
+      url: `${SITE_URL}/interview-experiences/${e.slug}`,
+      lastModified: new Date(`${e.date}-01`),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    })),
     { url: `${SITE_URL}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/terms`, lastModified: TERMS_UPDATED, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE_URL}/privacy`, lastModified: PRIVACY_UPDATED, changeFrequency: 'yearly', priority: 0.3 },
