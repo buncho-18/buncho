@@ -730,3 +730,21 @@ html[data-focus] .q-read .doc { font-size: 1.1875rem; line-height: 1.9; }
 }
 .doc-read pre code span,
 .q-read .doc pre code span { white-space: inherit; }
+
+
+/* ---------- Home launcher animations ---------- */
+
+/* Topic chips drift up and down, each on its own delay */
+@keyframes chip-float { 50% { transform: translateY(-8px); } }
+.chip-float { animation: chip-float 7s ease-in-out infinite; animation-delay: var(--d, 0s); }
+
+/* A ring travels along the interview rounds, R1 to R4, then repeats */
+@keyframes node-ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring) 65%, transparent); }
+  30%, 100% { box-shadow: 0 0 0 11px transparent; }
+}
+.node-ping { animation: node-ping 3.6s ease-out infinite; animation-delay: var(--d, 0s); }
+
+@media (prefers-reduced-motion: reduce) {
+  .chip-float, .node-ping { animation: none; }
+}
