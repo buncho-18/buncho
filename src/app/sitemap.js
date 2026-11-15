@@ -20,7 +20,8 @@ export default async function sitemap() {
     { url: `${SITE_URL}/interview-experiences`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     ...getAllExperiences().map((e) => ({
       url: `${SITE_URL}/interview-experiences/${e.slug}`,
-      lastModified: new Date(`${e.date}-01`),
+      // lastModified: new Date(`${e.date}-01`), 
+      lastModified: new Date(e.date),
       changeFrequency: 'monthly',
       priority: 0.6,
     })),
