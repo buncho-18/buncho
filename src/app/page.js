@@ -10,6 +10,7 @@ import {
   SITE_NAME,
   SITE_TAGLINE,
   SITE_DESCRIPTION,
+  X_HANDLE,
   X_URL,
   buildMetadata,
   graph,
@@ -166,6 +167,56 @@ function LaunchCard({ href, icon, title, subtitle, tone, preview, index }) {
   );
 }
 
+// Shown at the bottom of the launcher. Change the name here.
+const CREATOR = { name: 'Ritesh' };
+
+function CreatorCard() {
+  const inner = (
+    <>
+      {/* avatar with a slowly orbiting ring */}
+      <span className="relative grid h-11 w-11 shrink-0 place-items-center">
+        <span
+          aria-hidden="true"
+          className="ring-spin absolute inset-0 rounded-full"
+          style={{ background: 'conic-gradient(from 0deg, transparent 0 40%, var(--accent) 100%)' }}
+        />
+        <span className="relative grid h-[38px] w-[38px] place-items-center rounded-full bg-surface font-display text-base font-bold">
+          {CREATOR.name.charAt(0)}
+        </span>
+      </span>
+
+      <span className="min-w-0 text-left leading-tight">
+        <span className="block text-sm font-semibold">Built by {CREATOR.name}</span>
+        <span className="block truncate text-xs text-muted">
+          {X_HANDLE ? `Follow ${X_HANDLE} on X` : 'Creator of Buncho'}
+        </span>
+      </span>
+
+      {X_URL && (
+        <span
+          aria-hidden="true"
+          className="ml-2 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition-colors duration-300 group-hover:bg-ink group-hover:text-bg"
+        >
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </span>
+      )}
+    </>
+  );
+
+  const cls =
+    'rise group mt-5 inline-flex items-center gap-3 rounded-full border border-line bg-surface/80 p-1.5 pr-2 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-lg hover:shadow-black/10';
+
+  return X_URL ? (
+    <a href={X_URL} target="_blank" rel="noopener noreferrer" aria-label={`${CREATOR.name} on X`} style={{ '--i': 6 }} className={cls}>
+      {inner}
+    </a>
+  ) : (
+    <div style={{ '--i': 6 }} className={`${cls} pr-5`}>{inner}</div>
+  );
+}
+
 export default async function LandingPage() {
   const { userId } = await auth();
   let total = 0;
@@ -237,19 +288,7 @@ export default async function LandingPage() {
             </p>
           )}
 
-          {X_URL && (
-            <a
-              href={X_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${SITE_NAME} on X`}
-              className="mt-4 grid h-10 w-10 place-items-center rounded-xl bg-surface-2 text-muted transition hover:text-ink"
-            >
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-            </a>
-          )}
+          <CreatorCard />
         </div>
       </section>
 

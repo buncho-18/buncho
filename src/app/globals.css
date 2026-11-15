@@ -748,3 +748,8 @@ html[data-focus] .q-read .doc { font-size: 1.1875rem; line-height: 1.9; }
 @media (prefers-reduced-motion: reduce) {
   .chip-float, .node-ping { animation: none; }
 }
+
+/* Creator card: a ring that slowly orbits the avatar */
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+.ring-spin { animation: ring-spin 6s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .ring-spin { animation: none; } }
