@@ -112,7 +112,7 @@ export default async function InterviewExperiencesPage({ searchParams }) {
                   <span className="flex items-center gap-3">
                     <DifficultyMeter level={e.difficulty} />
                     <span className="text-muted">{countQuestions(e)} questions</span>
-                    {!e.verified && <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-muted" title="Illustrative example, not a verified submission">Sample</span>}
+          
                   </span>
                   <ChevronRight width={18} height={18} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-accent" />
                 </div>
