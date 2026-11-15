@@ -90,11 +90,7 @@ export default async function ExperiencePage({ params }) {
             {exp.outcome}
           </span>
           <DifficultyMeter level={exp.difficulty} />
-          {!exp.verified && (
-            <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-medium text-muted">
-              Sample: illustrative, not a verified submission
-            </span>
-          )}
+          
         </div>
 
         <p className="mt-5 leading-relaxed text-muted">{exp.summary}</p>

@@ -3,15 +3,15 @@
     {
       "slug": "genai-engineer-fintech-4-rounds",
       "verified": false,
-      "title": "GenAI Engineer interview at a mid-size fintech",
-      "candidate": { "name": "Anonymous candidate", "background": "B.Tech CSE, 1.5 years of experience" },
+      "title": "GenAI Engineer interview",
+      "candidate": { "name": "Malik", "background": "1.5 years of experience" },
       "company": { "name": "Mid-size fintech company", "type": "Product company", "location": "Bengaluru (hybrid)" },
       "role": "GenAI Engineer",
       "level": "Full-time",
-      "date": "2026-09",
-      "outcome": "Selected",
+      "date": "2026-11-13",
+      "outcome": "Awating Result",
       "difficulty": "HARD",
-      "totalDuration": "About 3 weeks from application to offer",
+      "totalDuration": "Awating Result",
       "summary": "Four rounds covering Python and SQL screening, a deep RAG discussion, an LLM evaluation system design round and a hiring manager chat. The RAG and evaluation rounds were the hardest.",
       "tags": ["RAG", "LLM evaluation", "System design", "Python", "SQL"],
       "rounds": [
@@ -28,21 +28,21 @@
               "text": "Given a list of document chunks with embeddings, return the top-k most similar chunks to a query vector without using any vector library (cosine similarity in plain Python or NumPy).",
               "topic": "Python",
               "difficulty": "EASY",
-              "solution": { "label": "Cosine similarity and top-k retrieval", "url": "/problems?q=cosine%20similarity" }
+              "solution": null
             },
             {
               "id": "r1-q2",
               "text": "Merge overlapping intervals. Then extend it: merge overlapping text spans that come from the same document when building a citation list.",
               "topic": "Coding",
               "difficulty": "MEDIUM",
-              "solution": { "label": "Merge intervals", "url": "/problems?q=merge%20intervals" }
+              "solution": null
             },
             {
               "id": "r1-q3",
               "text": "Write a SQL query to find the top 3 users by number of LLM requests per day, along with their average latency, from a table requests(user_id, created_at, latency_ms).",
               "topic": "SQL",
               "difficulty": "MEDIUM",
-              "solution": { "label": "Top N per group with window functions", "url": "/problems/sql?q=window" }
+              "solution": null
             },
             {
               "id": "r1-q4",
@@ -66,28 +66,28 @@
               "text": "Walk me through your RAG pipeline end to end. Why did you pick that chunk size and overlap, and how did you validate the choice?",
               "topic": "RAG",
               "difficulty": "MEDIUM",
-              "solution": { "label": "Chunking strategies for RAG", "url": "/problems?q=chunking" }
+              "solution": null
             },
             {
               "id": "r2-q2",
               "text": "Dense retrieval returns plausible but wrong chunks for queries with exact product codes. How do you fix it?",
               "topic": "RAG",
               "difficulty": "HARD",
-              "solution": { "label": "Hybrid search: BM25 plus dense retrieval", "url": "/problems?q=hybrid%20search" }
+              "solution": null
             },
             {
               "id": "r2-q3",
               "text": "What is the difference between a bi-encoder and a cross-encoder? Where does a reranker sit and what latency does it add?",
               "topic": "RAG",
               "difficulty": "MEDIUM",
-              "solution": { "label": "Rerankers explained", "url": "/problems?q=rerank" }
+              "solution": null
             },
             {
               "id": "r2-q4",
               "text": "How would you reduce hallucinations when the retrieved context does not contain the answer?",
               "topic": "LLMs",
               "difficulty": "MEDIUM",
-              "solution": { "label": "Reducing hallucinations", "url": "/problems?q=hallucination" }
+              "solution": { "label": "Reducing hallucinations", "url": "/problems/qnvtumuzsp" }
             }
           ]
         },
@@ -104,21 +104,21 @@
               "text": "Design an evaluation pipeline for a customer-support RAG assistant. What do you measure offline, and what do you monitor in production?",
               "topic": "LLM evaluation",
               "difficulty": "HARD",
-              "solution": { "label": "Designing an LLM evaluation pipeline", "url": "/problems?q=evaluation" }
+               "solution": null
             },
             {
               "id": "r3-q2",
               "text": "How would you use an LLM as a judge, and how do you check that the judge itself is reliable (position bias, verbosity bias, agreement with humans)?",
               "topic": "LLM evaluation",
               "difficulty": "HARD",
-              "solution": { "label": "LLM-as-a-judge pitfalls", "url": "/problems?q=judge" }
+               "solution": null
             },
             {
               "id": "r3-q3",
               "text": "Faithfulness, answer relevance and context precision: define each and say which one you would alert on first.",
               "topic": "RAG metrics",
               "difficulty": "MEDIUM",
-              "solution": { "label": "RAG evaluation metrics", "url": "/problems?q=faithfulness" }
+               "solution": null
             },
             {
               "id": "r3-q4",
@@ -142,14 +142,14 @@
               "text": "Tell me about a time a model or pipeline you built failed in production or in a demo. What did you do?",
               "topic": "Behavioural",
               "difficulty": "EASY",
-              "solution": { "label": "HR question bank", "url": "/problems/hr" }
+               "solution": null
             },
             {
               "id": "r4-q2",
               "text": "Why GenAI engineering and not classical ML? Where do you want to be in two years?",
               "topic": "HR",
               "difficulty": "EASY",
-              "solution": { "label": "HR question bank", "url": "/problems/hr" }
+               "solution": null
             }
           ]
         }
@@ -158,114 +158,6 @@
         "Know your own project to the last detail: chunk size, embedding model, top-k, latency and what you measured.",
         "Have a concrete failure story for retrieval and be ready to explain how you diagnosed it.",
         "For the design round, start with metrics and data before drawing boxes."
-      ]
-    },
-    {
-      "slug": "ai-engineer-intern-startup-3-rounds",
-      "verified": false,
-      "title": "AI Engineer intern interview at an early-stage AI startup",
-      "candidate": { "name": "Anonymous candidate", "background": "Final-year B.Tech CS student" },
-      "company": { "name": "Early-stage AI startup", "type": "Startup", "location": "Remote (India)" },
-      "role": "AI Engineer Intern",
-      "level": "Internship",
-      "date": "2026-10",
-      "outcome": "Selected",
-      "difficulty": "MEDIUM",
-      "totalDuration": "10 days from application to offer",
-      "summary": "A take-home RAG assignment, a live review of that assignment with agent-focused follow-ups, and a short founder conversation. Practical and project driven, with very little data-structures content.",
-      "tags": ["Agents", "RAG", "Take-home", "Tool calling", "Internship"],
-      "rounds": [
-        {
-          "id": "r1",
-          "title": "Take-home assignment",
-          "type": "Assignment",
-          "mode": "Offline, 48 hours",
-          "duration": "48 hours",
-          "summary": "Build a small question-answering service over a set of PDFs with a README explaining the trade-offs. Evaluated on the design choices as much as on the output.",
-          "questions": [
-            {
-              "id": "r1-q1",
-              "text": "Build an API that ingests PDFs, chunks and embeds them, and answers questions with citations to the source page.",
-              "topic": "RAG",
-              "difficulty": "MEDIUM",
-              "solution": { "label": "Build a RAG pipeline with citations", "url": "/problems?q=rag" }
-            },
-            {
-              "id": "r1-q2",
-              "text": "Add a small evaluation script with at least 10 question and answer pairs and report a metric of your choice.",
-              "topic": "LLM evaluation",
-              "difficulty": "MEDIUM",
-              "solution": { "label": "Evaluating a RAG system", "url": "/problems?q=evaluation" }
-            }
-          ]
-        },
-        {
-          "id": "r2",
-          "title": "Assignment review and technical discussion",
-          "type": "Technical",
-          "mode": "Video call",
-          "duration": "55 min",
-          "summary": "Screen-shared walkthrough of my submission, then follow-up questions on extending it into an agent that can call tools.",
-          "questions": [
-            {
-              "id": "r2-q1",
-              "text": "Why did you choose this embedding model and vector store? What would you change if the corpus grew to 10 million chunks?",
-              "topic": "RAG",
-              "difficulty": "MEDIUM",
-              "solution": { "label": "Scaling vector search", "url": "/problems?q=vector%20database" }
-            },
-            {
-              "id": "r2-q2",
-              "text": "Turn this into an agent that can also query a SQL database. How do you decide when to retrieve and when to call the tool?",
-              "topic": "Agents",
-              "difficulty": "HARD",
-              "solution": { "label": "Agent tool routing", "url": "/problems?q=agent" }
-            },
-            {
-              "id": "r2-q3",
-              "text": "How do you stop an agent from looping forever or calling the same tool repeatedly? What do you log to debug it?",
-              "topic": "Agents",
-              "difficulty": "MEDIUM",
-              "solution": { "label": "Agent reliability and observability", "url": "/problems?q=agent%20loop" }
-            },
-            {
-              "id": "r2-q4",
-              "text": "Explain structured output and function calling. How do you handle a model returning invalid JSON?",
-              "topic": "LLMs",
-              "difficulty": "EASY",
-              "solution": { "label": "Structured outputs", "url": "/problems?q=structured%20output" }
-            }
-          ]
-        },
-        {
-          "id": "r3",
-          "title": "Founder conversation",
-          "type": "Managerial",
-          "mode": "Video call",
-          "duration": "30 min",
-          "summary": "Informal chat about projects, learning speed and availability. No technical questions.",
-          "questions": [
-            {
-              "id": "r3-q1",
-              "text": "Which of your projects are you proudest of and what would you do differently now?",
-              "topic": "Behavioural",
-              "difficulty": "EASY",
-              "solution": { "label": "HR question bank", "url": "/problems/hr" }
-            },
-            {
-              "id": "r3-q2",
-              "text": "How do you keep up with new LLM tools and papers, and how do you decide what is worth adopting?",
-              "topic": "HR",
-              "difficulty": "EASY",
-              "solution": null
-            }
-          ]
-        }
-      ],
-      "tips": [
-        "Write a clear README: what you built, what you skipped and why.",
-        "Even a tiny evaluation script sets a submission apart.",
-        "Be ready to extend your own code live, so keep it simple enough to modify in front of someone."
       ]
     }
   ]
