@@ -9,7 +9,7 @@ import { Check, ChevronRight, FileText, Flask, Lock, Tag } from '@/components/ic
 
 export const metadata = { title: 'Job preparation' };
 
-// Gradient pairs for the company avatars, picked from the theme colours so light and dark both work
+// Gradient pairs for the company avatars,  the theme colours so light and dark both work
 const AVATARS = [
   ['--accent', '--easy'],
   ['--easy', '--accent'],
