@@ -1,6 +1,5 @@
 // Every piece of the logo, in reading order: the tile, then b u n c h o and the dot.
 // x / y: where the piece starts (rem, negative = left / up, positive = right / down), r: its starting tilt (deg).
-// The pieces come in from alternating sides, so the logo is built from both directions at once.
 const PIECES = [
   { x: -15, y: 3, r: -40 }, // tile
   { x: 13, y: -3.5, r: 35 }, // b
@@ -9,7 +8,7 @@ const PIECES = [
   { x: -12, y: 3.5, r: -35 }, // c
   { x: 11, y: -4, r: 30 }, // h
   { x: -14, y: 3, r: -45 }, // o
-  { x: 12, y: -3, r: 60 }, // dot
+  { x: 12, y: -3, r: 60 }, // dot (only used for the scatter at the end)
 ];
 const LETTERS = 'buncho'.split('');
 
@@ -36,9 +35,11 @@ const piece = (i) => {
 // Animated logo shown while a page loads (used by every loading.js). Pure CSS (see the "Brand loader" block in
 // globals.css), so it costs no JavaScript and can be a server component.
 //
-// The tile and each letter fly in from the left and the right and lock together into the logo (the letters light up
-// in a quick wave and a band of light sweeps across). After a pause the pieces scatter again and the build replays, for as
-// long as the page is still loading. It appears after a short delay, so a page that loads instantly never flashes it.
+// 1. The tile and each letter fly in from the left and the right and lock together.
+// 2. A light ball hops across the word, one letter at a time (each letter squashes and glows when it lands on it)
+//    and settles into place as the final dot.
+// 3. A band of light sweeps over the finished logo.
+// After a pause the pieces scatter again and it replays, for as long as the page is still loading.
 export default function BrandLoader({ label = 'Loading', fill = true }) {
   return (
     <div
@@ -71,12 +72,21 @@ export default function BrandLoader({ label = 'Loading', fill = true }) {
         {/* the wordmark, one piece per letter */}
         <span aria-hidden="true" className="relative flex items-baseline text-[3.2rem] font-extrabold leading-none tracking-tight text-ink sm:text-[4.25rem]">
           {LETTERS.map((c, i) => (
-            <span key={i} className="bl-piece bl-letter" style={piece(i + 1)}>
-              {c}
+            <span key={i} className="bl-piece" style={piece(i + 1)}>
+              {/* squashes and lights up when the ball lands on it */}
+              <span className="bl-squash" style={{ '--k': i }}>
+                {c}
+              </span>
             </span>
           ))}
-          <span className="bl-piece bl-letter text-[#34d67b]" style={piece(LETTERS.length + 1)}>
+          {/* the final dot only appears when the ball settles into its place */}
+          <span className="bl-dot text-[#34d67b]" style={piece(LETTERS.length + 1)}>
             .
+          </span>
+
+          {/* the ball: hops across the letters, one by one, and ends as the dot */}
+          <span aria-hidden="true" className="bl-ballx pointer-events-none absolute">
+            <span className="bl-bally block h-full w-full rounded-full bg-[#34d67b]" />
           </span>
         </span>
 
