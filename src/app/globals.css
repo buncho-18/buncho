@@ -732,119 +732,98 @@ html[data-focus] .q-read .doc { font-size: 1.1875rem; line-height: 1.9; }
 .q-read .doc pre code span { white-space: inherit; }
 
 
-/* ---------- Home launcher animations ---------- */
-
-/* Topic chips drift up and down, each on its own delay */
-@keyframes chip-float { 50% { transform: translateY(-8px); } }
-.chip-float { animation: chip-float 7s ease-in-out infinite; animation-delay: var(--d, 0s); }
-
-/* A ring travels along the interview rounds, R1 to R4, then repeats */
-@keyframes node-ping {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring) 65%, transparent); }
-  30%, 100% { box-shadow: 0 0 0 11px transparent; }
-}
-.node-ping { animation: node-ping 3.6s ease-out infinite; animation-delay: var(--d, 0s); }
-
-@media (prefers-reduced-motion: reduce) {
-  .chip-float, .node-ping { animation: none; }
-}
-
-/* Creator card: a ring that slowly orbits the avatar */
-@keyframes ring-spin { to { transform: rotate(360deg); } }
-.ring-spin { animation: ring-spin 6s linear infinite; }
-@media (prefers-reduced-motion: reduce) { .ring-spin { animation: none; } }
-
-
-
-
-
-
-
 /* ---------------------------------------------------------------------------------------------------------------
    Brand loader (components/BrandLoader.js): the animated logo shown by every loading.js.
-   The tile flies in from the left and the wordmark from the right, they snap together, hold, part and replay.
-   One cycle is 3.4s (--bl-t). Every part uses the same cycle, so they stay in step.
+   The tile and every letter fly in from the left and the right and lock together into the logo, hold, scatter and
+   replay. One cycle is 4s (--bl-t). Each piece starts a little after the one before it (--i), so they land one by one.
    --------------------------------------------------------------------------------------------------------------- */
-.bl-stage { --bl-t: 3.4s; --bl-d: 0.15s; animation: bl-in 0.25s ease-out var(--bl-d) both; }
+.bl-stage { --bl-t: 4s; --bl-d: 0.15s; animation: bl-in 0.25s ease-out var(--bl-d) both; }
 
-.bl-left { animation: bl-from-left var(--bl-t) var(--bl-d) infinite; will-change: transform, opacity; }
-.bl-right { animation: bl-from-right var(--bl-t) var(--bl-d) infinite; will-change: transform, opacity; }
+.bl-piece {
+  display: inline-block;
+  animation-name: bl-piece;
+  animation-duration: var(--bl-t);
+  animation-delay: calc(var(--bl-d) + var(--i) * 0.12s);
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+/* letters also light up in a quick wave once they have landed */
+.bl-letter { animation-name: bl-piece, bl-flash; }
 
 .bl-tile { box-shadow: 0 14px 34px -10px color-mix(in srgb, #34d67b 55%, transparent); }
 
-.bl-halo {
-  background: radial-gradient(closest-side, color-mix(in srgb, #34d67b 42%, transparent), transparent 70%);
+.bl-glow {
+  background: radial-gradient(closest-side, color-mix(in srgb, #34d67b 30%, transparent), transparent 75%);
   opacity: 0;
-  animation: bl-halo var(--bl-t) var(--bl-d) infinite;
-}
-.bl-ring { border: 2px solid #34d67b; opacity: 0; animation: bl-ring var(--bl-t) var(--bl-d) infinite; }
-.bl-joint {
-  background: radial-gradient(closest-side, #fff 0%, color-mix(in srgb, #34d67b 80%, transparent) 35%, transparent 72%);
-  opacity: 0;
-  animation: bl-joint var(--bl-t) var(--bl-d) infinite;
+  animation: bl-glow var(--bl-t) var(--bl-d) infinite;
 }
 
-.bl-letter,
-.bl-dot { display: inline-block; animation: bl-wave var(--bl-t) infinite; animation-delay: calc(var(--bl-d) + var(--i) * 0.07s); }
-.bl-dot { animation-name: bl-dot; }
-
-.bl-bar { animation: bl-slide 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.bl-spark {
+  opacity: 0;
+  box-shadow: 0 0 10px 2px #34d67b;
+  animation: bl-spark var(--bl-t) calc(var(--bl-d) + var(--sd)) infinite;
+}
+.bl-shine {
+  opacity: 0;
+  background: linear-gradient(100deg, transparent 38%, color-mix(in srgb, #fff 55%, transparent) 50%, transparent 62%);
+  background-size: 250% 100%;
+  background-position: 130% 0;
+  mix-blend-mode: soft-light;
+  animation: bl-shine var(--bl-t) var(--bl-d) infinite;
+}
 
 @keyframes bl-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* apart (0-4%) -> flies in and meets (4-42%) -> settles (50%) -> holds, floating (50-82%) -> parts again (82-95%) */
-@keyframes bl-from-left {
-  0%, 4% { opacity: 0; transform: translateX(-11rem) rotate(-34deg) scale(0.5); filter: blur(7px); animation-timing-function: cubic-bezier(0.25, 0.6, 0.3, 1); }
-  42% { opacity: 1; transform: translateX(0.3rem) rotate(4deg) scale(1.05); filter: blur(0); animation-timing-function: ease-in-out; }
-  50% { opacity: 1; transform: translateX(0) rotate(0) scale(1); animation-timing-function: ease-in-out; }
-  65% { opacity: 1; transform: translateY(-5px) rotate(-2deg) scale(1.02); animation-timing-function: ease-in-out; }
-  82% { opacity: 1; transform: translateY(0) rotate(0) scale(1); filter: blur(0); animation-timing-function: ease-in; }
-  95%, 100% { opacity: 0; transform: translateX(-5rem) rotate(-16deg) scale(0.8); filter: blur(5px); }
-}
-@keyframes bl-from-right {
-  0%, 4% { opacity: 0; transform: translateX(11rem) scale(0.88); filter: blur(7px); animation-timing-function: cubic-bezier(0.25, 0.6, 0.3, 1); }
-  42% { opacity: 1; transform: translateX(-0.25rem) scale(1.02); filter: blur(0); animation-timing-function: ease-in-out; }
-  50% { opacity: 1; transform: translateX(0) scale(1); animation-timing-function: ease-in-out; }
-  82% { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); animation-timing-function: ease-in; }
-  95%, 100% { opacity: 0; transform: translateX(5rem) scale(0.92); filter: blur(5px); }
-}
-
-/* the moment they meet (about 42%): a flash at the joint, a ring leaving the tile and a glow that stays while it holds */
-@keyframes bl-joint {
-  0%, 38% { opacity: 0; transform: scale(0.3); }
-  44% { opacity: 1; transform: scale(1); }
-  60%, 100% { opacity: 0; transform: scale(1.7); }
-}
-@keyframes bl-ring {
-  0%, 40% { opacity: 0; transform: scale(0.95); }
-  44% { opacity: 0.7; transform: scale(1); }
-  66%, 100% { opacity: 0; transform: scale(1.55); }
-}
-@keyframes bl-halo {
-  0%, 34% { opacity: 0; transform: scale(0.7); }
-  48% { opacity: 1; transform: scale(1.15); }
-  66% { opacity: 0.6; transform: scale(0.95); }
-  80% { opacity: 0.9; transform: scale(1.08); }
-  93%, 100% { opacity: 0; transform: scale(0.8); }
+/* scattered (0-4%) -> flies in and locks (4-34%, with a tiny overshoot) -> holds (34-86%) -> scatters (86-97%) */
+@keyframes bl-piece {
+  0%, 4% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0.55);
+    filter: blur(6px);
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.06);
+  }
+  34% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); filter: blur(0); animation-timing-function: linear; }
+  86% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); filter: blur(0); animation-timing-function: ease-in; }
+  97%, 100% {
+    opacity: 0;
+    transform: translate(calc(var(--x) * -0.45), calc(var(--y) * -1)) rotate(calc(var(--r) * -0.6)) scale(0.7);
+    filter: blur(5px);
+  }
 }
 
-/* once joined (about 52-72%) the letters ripple and the dot bounces */
-@keyframes bl-wave {
-  0%, 52%, 74%, 100% { transform: translateY(0); color: var(--ink); }
-  62% { transform: translateY(-0.14em); color: var(--accent); }
+/* colour only (the move is in bl-piece): each letter flashes green just after it landed, left to right */
+@keyframes bl-flash {
+  0%, 38%, 58%, 100% { color: var(--ink); }
+  47% { color: var(--accent); }
 }
-@keyframes bl-dot {
-  0%, 52%, 74%, 100% { transform: translateY(0) scale(1); }
-  63% { transform: translateY(-0.22em) scale(1.45); }
+
+/* the logo is complete (the last piece lands at about 55%): a glow behind it */
+@keyframes bl-glow {
+  0%, 48% { opacity: 0; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.05); }
+  78% { opacity: 0.55; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(0.85); }
 }
-@keyframes bl-slide { 0% { transform: translateX(-110%); } 100% { transform: translateX(320%); } }
+
+/* sparks: drift in from the sides while the pieces fly, and are gone once the logo is built */
+@keyframes bl-spark {
+  0% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.4); }
+  8% { opacity: 1; }
+  34% { opacity: 0.9; transform: translate(calc(var(--x) * 0.05), calc(var(--y) * 0.05)) scale(1); }
+  44%, 100% { opacity: 0; transform: translate(0, 0) scale(0.2); }
+}
+/* one soft band of light passes over the finished logo */
+@keyframes bl-shine {
+  0%, 52% { opacity: 0; background-position: 130% 0; }
+  56% { opacity: 1; }
+  74% { opacity: 1; background-position: -30% 0; }
+  78%, 100% { opacity: 0; background-position: -30% 0; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   /* no flying: the finished logo, gently breathing */
-  .bl-left, .bl-right { animation: none; filter: none; }
-  .bl-halo, .bl-ring, .bl-joint, .bl-letter, .bl-dot { animation: none; }
-  .bl-ring, .bl-joint { display: none; }
-  .bl-halo { opacity: 0.6; animation: bl-fade 1.8s ease-in-out infinite; }
-  .bl-bar { animation: bl-fade 1.8s ease-in-out infinite; width: 100%; }
+  .bl-piece, .bl-letter { animation: none; filter: none; }
+  .bl-spark, .bl-shine { display: none; }
+  .bl-glow { opacity: 0.7; animation: bl-fade 1.8s ease-in-out infinite; }
 }
-@keyframes bl-fade { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+@keyframes bl-fade { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }

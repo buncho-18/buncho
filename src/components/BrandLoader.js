@@ -1,11 +1,44 @@
+// Every piece of the logo, in reading order: the tile, then b u n c h o and the dot.
+// x / y: where the piece starts (rem, negative = left / up, positive = right / down), r: its starting tilt (deg).
+// The pieces come in from alternating sides, so the logo is built from both directions at once.
+const PIECES = [
+  { x: -15, y: 3, r: -40 }, // tile
+  { x: 13, y: -3.5, r: 35 }, // b
+  { x: -11, y: 4, r: -30 }, // u
+  { x: 14, y: -3, r: 45 }, // n
+  { x: -12, y: 3.5, r: -35 }, // c
+  { x: 11, y: -4, r: 30 }, // h
+  { x: -14, y: 3, r: -45 }, // o
+  { x: 12, y: -3, r: 60 }, // dot
+];
 const LETTERS = 'buncho'.split('');
+
+// Little light sparks that stream in from both sides toward the logo while it is being built.
+// x / y: start offset (rem), d: extra delay (s), s: size (px).
+const SPARKS = [
+  { x: -18, y: -2, d: 0, s: 5 },
+  { x: 17, y: 2.5, d: 0.1, s: 4 },
+  { x: -15, y: 3.5, d: 0.2, s: 6 },
+  { x: 16, y: -3, d: 0.3, s: 4 },
+  { x: -20, y: 0.5, d: 0.4, s: 3 },
+  { x: 19, y: -0.5, d: 0.5, s: 5 },
+  { x: -13, y: -3.5, d: 0.6, s: 4 },
+  { x: 14, y: 3.5, d: 0.7, s: 3 },
+  { x: -17, y: 1.5, d: 0.8, s: 5 },
+  { x: 18, y: -2, d: 0.9, s: 4 },
+];
+
+const piece = (i) => {
+  const p = PIECES[i];
+  return { '--i': i, '--x': `${p.x}rem`, '--y': `${p.y}rem`, '--r': `${p.r}deg` };
+};
 
 // Animated logo shown while a page loads (used by every loading.js). Pure CSS (see the "Brand loader" block in
 // globals.css), so it costs no JavaScript and can be a server component.
 //
-// The "b" tile flies in from the left and the wordmark from the right, they meet and snap together into the logo
-// (with a flash), the letters ripple, then the two halves part and the whole thing plays again, for as long as the
-// page is still loading. It appears after a short delay, so a page that loads instantly never flashes it.
+// The tile and each letter fly in from the left and the right and lock together into the logo (the letters light up
+// in a quick wave and a band of light sweeps across). After a pause the pieces scatter again and the build replays, for as
+// long as the page is still loading. It appears after a short delay, so a page that loads instantly never flashes it.
 export default function BrandLoader({ label = 'Loading', fill = true }) {
   return (
     <div
@@ -14,36 +47,41 @@ export default function BrandLoader({ label = 'Loading', fill = true }) {
       aria-busy="true"
       className={`grid place-items-center overflow-hidden px-4 ${fill ? 'min-h-[calc(100dvh-4rem)]' : 'py-24'}`}
     >
-      <div className="bl-stage flex flex-col items-center">
-        <div className="flex items-center gap-4 sm:gap-5">
-          {/* left half: the tile */}
-          <span aria-hidden="true" className="bl-left relative grid h-[4.5rem] w-[4.5rem] place-items-center sm:h-24 sm:w-24">
-            <span className="bl-halo absolute -inset-6 rounded-full" />
-            <span className="bl-ring absolute -inset-1 rounded-[1.9rem]" />
-            <span className="bl-tile relative grid h-full w-full place-items-center rounded-[1.4rem] bg-[#04140a] text-[3.2rem] font-extrabold leading-none text-[#34d67b] sm:rounded-[1.7rem] sm:text-[4.25rem] dark:bg-[#34d67b] dark:text-[#04140a]">
-              <span className="-translate-y-0.5 sm:-translate-y-1">b</span>
-            </span>
-          </span>
+      <div className="bl-stage relative flex items-center gap-4 sm:gap-5">
+        {/* soft glow behind the finished logo */}
+        <span aria-hidden="true" className="bl-glow pointer-events-none absolute -inset-x-10 -inset-y-8 rounded-full" />
 
-          {/* right half: the wordmark */}
-          <span aria-hidden="true" className="bl-right relative flex items-baseline text-[3.2rem] font-extrabold leading-none tracking-tight text-ink sm:text-[4.25rem]">
-            {/* the flash where the two halves meet */}
-            <span className="bl-joint pointer-events-none absolute -left-5 top-1/2 h-16 w-16 -translate-y-1/2 sm:-left-6 sm:h-24 sm:w-24" />
-            {LETTERS.map((c, i) => (
-              <span key={i} className="bl-letter" style={{ '--i': i }}>
-                {c}
-              </span>
-            ))}
-            <span className="bl-dot text-[#34d67b]" style={{ '--i': LETTERS.length }}>
-              .
-            </span>
-          </span>
-        </div>
+        {/* sparks streaming toward the logo */}
+        {SPARKS.map((k, i) => (
+          <span
+            key={i}
+            aria-hidden="true"
+            className="bl-spark pointer-events-none absolute left-1/2 top-1/2 rounded-full bg-[#34d67b]"
+            style={{ '--x': `${k.x}rem`, '--y': `${k.y}rem`, '--sd': `${k.d}s`, width: k.s, height: k.s }}
+          />
+        ))}
 
-        {/* progress */}
-        <span aria-hidden="true" className="mt-9 block h-1 w-40 overflow-hidden rounded-full bg-line sm:w-48">
-          <span className="bl-bar block h-full w-1/3 rounded-full bg-accent" />
+        {/* the tile */}
+        <span aria-hidden="true" className="bl-piece relative grid h-[4.5rem] w-[4.5rem] place-items-center sm:h-24 sm:w-24" style={piece(0)}>
+          <span className="bl-tile relative grid h-full w-full place-items-center rounded-[1.4rem] bg-[#04140a] text-[3.2rem] font-extrabold leading-none text-[#34d67b] sm:rounded-[1.7rem] sm:text-[4.25rem] dark:bg-[#34d67b] dark:text-[#04140a]">
+            <span className="-translate-y-0.5 sm:-translate-y-1">b</span>
+          </span>
         </span>
+
+        {/* the wordmark, one piece per letter */}
+        <span aria-hidden="true" className="relative flex items-baseline text-[3.2rem] font-extrabold leading-none tracking-tight text-ink sm:text-[4.25rem]">
+          {LETTERS.map((c, i) => (
+            <span key={i} className="bl-piece bl-letter" style={piece(i + 1)}>
+              {c}
+            </span>
+          ))}
+          <span className="bl-piece bl-letter text-[#34d67b]" style={piece(LETTERS.length + 1)}>
+            .
+          </span>
+        </span>
+
+        {/* a band of light that sweeps across the finished logo */}
+        <span aria-hidden="true" className="bl-shine pointer-events-none absolute inset-0 overflow-hidden rounded-3xl" />
 
         <span className="sr-only">{label}…</span>
       </div>
