@@ -753,3 +753,98 @@ html[data-focus] .q-read .doc { font-size: 1.1875rem; line-height: 1.9; }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 .ring-spin { animation: ring-spin 6s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .ring-spin { animation: none; } }
+
+
+
+
+
+
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Brand loader (components/BrandLoader.js): the animated logo shown by every loading.js.
+   The tile flies in from the left and the wordmark from the right, they snap together, hold, part and replay.
+   One cycle is 3.4s (--bl-t). Every part uses the same cycle, so they stay in step.
+   --------------------------------------------------------------------------------------------------------------- */
+.bl-stage { --bl-t: 3.4s; --bl-d: 0.15s; animation: bl-in 0.25s ease-out var(--bl-d) both; }
+
+.bl-left { animation: bl-from-left var(--bl-t) var(--bl-d) infinite; will-change: transform, opacity; }
+.bl-right { animation: bl-from-right var(--bl-t) var(--bl-d) infinite; will-change: transform, opacity; }
+
+.bl-tile { box-shadow: 0 14px 34px -10px color-mix(in srgb, #34d67b 55%, transparent); }
+
+.bl-halo {
+  background: radial-gradient(closest-side, color-mix(in srgb, #34d67b 42%, transparent), transparent 70%);
+  opacity: 0;
+  animation: bl-halo var(--bl-t) var(--bl-d) infinite;
+}
+.bl-ring { border: 2px solid #34d67b; opacity: 0; animation: bl-ring var(--bl-t) var(--bl-d) infinite; }
+.bl-joint {
+  background: radial-gradient(closest-side, #fff 0%, color-mix(in srgb, #34d67b 80%, transparent) 35%, transparent 72%);
+  opacity: 0;
+  animation: bl-joint var(--bl-t) var(--bl-d) infinite;
+}
+
+.bl-letter,
+.bl-dot { display: inline-block; animation: bl-wave var(--bl-t) infinite; animation-delay: calc(var(--bl-d) + var(--i) * 0.07s); }
+.bl-dot { animation-name: bl-dot; }
+
+.bl-bar { animation: bl-slide 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+
+@keyframes bl-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* apart (0-4%) -> flies in and meets (4-42%) -> settles (50%) -> holds, floating (50-82%) -> parts again (82-95%) */
+@keyframes bl-from-left {
+  0%, 4% { opacity: 0; transform: translateX(-11rem) rotate(-34deg) scale(0.5); filter: blur(7px); animation-timing-function: cubic-bezier(0.25, 0.6, 0.3, 1); }
+  42% { opacity: 1; transform: translateX(0.3rem) rotate(4deg) scale(1.05); filter: blur(0); animation-timing-function: ease-in-out; }
+  50% { opacity: 1; transform: translateX(0) rotate(0) scale(1); animation-timing-function: ease-in-out; }
+  65% { opacity: 1; transform: translateY(-5px) rotate(-2deg) scale(1.02); animation-timing-function: ease-in-out; }
+  82% { opacity: 1; transform: translateY(0) rotate(0) scale(1); filter: blur(0); animation-timing-function: ease-in; }
+  95%, 100% { opacity: 0; transform: translateX(-5rem) rotate(-16deg) scale(0.8); filter: blur(5px); }
+}
+@keyframes bl-from-right {
+  0%, 4% { opacity: 0; transform: translateX(11rem) scale(0.88); filter: blur(7px); animation-timing-function: cubic-bezier(0.25, 0.6, 0.3, 1); }
+  42% { opacity: 1; transform: translateX(-0.25rem) scale(1.02); filter: blur(0); animation-timing-function: ease-in-out; }
+  50% { opacity: 1; transform: translateX(0) scale(1); animation-timing-function: ease-in-out; }
+  82% { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); animation-timing-function: ease-in; }
+  95%, 100% { opacity: 0; transform: translateX(5rem) scale(0.92); filter: blur(5px); }
+}
+
+/* the moment they meet (about 42%): a flash at the joint, a ring leaving the tile and a glow that stays while it holds */
+@keyframes bl-joint {
+  0%, 38% { opacity: 0; transform: scale(0.3); }
+  44% { opacity: 1; transform: scale(1); }
+  60%, 100% { opacity: 0; transform: scale(1.7); }
+}
+@keyframes bl-ring {
+  0%, 40% { opacity: 0; transform: scale(0.95); }
+  44% { opacity: 0.7; transform: scale(1); }
+  66%, 100% { opacity: 0; transform: scale(1.55); }
+}
+@keyframes bl-halo {
+  0%, 34% { opacity: 0; transform: scale(0.7); }
+  48% { opacity: 1; transform: scale(1.15); }
+  66% { opacity: 0.6; transform: scale(0.95); }
+  80% { opacity: 0.9; transform: scale(1.08); }
+  93%, 100% { opacity: 0; transform: scale(0.8); }
+}
+
+/* once joined (about 52-72%) the letters ripple and the dot bounces */
+@keyframes bl-wave {
+  0%, 52%, 74%, 100% { transform: translateY(0); color: var(--ink); }
+  62% { transform: translateY(-0.14em); color: var(--accent); }
+}
+@keyframes bl-dot {
+  0%, 52%, 74%, 100% { transform: translateY(0) scale(1); }
+  63% { transform: translateY(-0.22em) scale(1.45); }
+}
+@keyframes bl-slide { 0% { transform: translateX(-110%); } 100% { transform: translateX(320%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  /* no flying: the finished logo, gently breathing */
+  .bl-left, .bl-right { animation: none; filter: none; }
+  .bl-halo, .bl-ring, .bl-joint, .bl-letter, .bl-dot { animation: none; }
+  .bl-ring, .bl-joint { display: none; }
+  .bl-halo { opacity: 0.6; animation: bl-fade 1.8s ease-in-out infinite; }
+  .bl-bar { animation: bl-fade 1.8s ease-in-out infinite; width: 100%; }
+}
+@keyframes bl-fade { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }

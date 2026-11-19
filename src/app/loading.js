@@ -1,5 +1,6 @@
-import { PageSkeleton } from '@/components/Skeletons';
+import BrandLoader from '@/components/BrandLoader';
 
+// The animated logo while this page loads
 export default function Loading() {
-  return <PageSkeleton />;
+  return <BrandLoader />;
 }
