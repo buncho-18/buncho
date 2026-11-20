@@ -732,168 +732,145 @@ html[data-focus] .q-read .doc { font-size: 1.1875rem; line-height: 1.9; }
 .q-read .doc pre code span { white-space: inherit; }
 
 
+/* ---------- Home launcher animations ---------- */
+
+/* Topic chips drift up and down, each on its own delay */
+@keyframes chip-float { 50% { transform: translateY(-8px); } }
+.chip-float { animation: chip-float 7s ease-in-out infinite; animation-delay: var(--d, 0s); }
+
+/* A ring travels along the interview rounds, R1 to R4, then repeats */
+@keyframes node-ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring) 65%, transparent); }
+  30%, 100% { box-shadow: 0 0 0 11px transparent; }
+}
+.node-ping { animation: node-ping 3.6s ease-out infinite; animation-delay: var(--d, 0s); }
+
+@media (prefers-reduced-motion: reduce) {
+  .chip-float, .node-ping { animation: none; }
+}
+
+/* Creator card: a ring that slowly orbits the avatar */
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+.ring-spin { animation: ring-spin 6s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .ring-spin { animation: none; } }
+
 /* ---------------------------------------------------------------------------------------------------------------
-   Brand loader (components/BrandLoader.js): the animated logo shown by every loading.js.
-   One cycle is 4.6s (--bl-t):
-     0-30%   the tile and the letters fly in from the left and the right and lock together (--i staggers them)
-     38-72%  a ball hops over b-u-n-c-h-o, one letter per hop, and settles as the final dot
-     78-92%  a band of light sweeps over the logo
-     86-97%  everything scatters, then it replays
+   Brand loader (components/BrandLoader.js): the animated logo shown by every loading.js. Logo only, no text.
+   One cycle is 4s (--bl-t):
+     0-22%   liquid drops come in from the left and the right and fuse into one blob (SVG "goo" filter)
+     22-28%  the blob morphs into the glass logo tile (round -> squircle, with a spring)
+     42-62%  a band of light sweeps over the logo
+     86-97%  it dissolves, then it replays
    --------------------------------------------------------------------------------------------------------------- */
-.bl-stage { --bl-t: 4.6s; --bl-d: 0.15s; animation: bl-in 0.25s ease-out var(--bl-d) both; }
+.bl-stage { --bl-t: 4s; --bl-d: 0.15s; animation: bl-in 0.3s ease-out var(--bl-d) both; }
 
-.bl-piece {
-  display: inline-block;
-  animation: bl-piece var(--bl-t) calc(var(--bl-d) + var(--i) * 0.06s) infinite;
+/* logo size (the drops and the tile are sized from it) */
+.bl-tilebox { --tile: 6rem; position: relative; display: block; width: var(--tile); height: var(--tile); }
+@media (min-width: 640px) { .bl-tilebox { --tile: 8rem; } }
+
+/* the drops live in a wide, short box centred on the logo so the filter does not clip them */
+.bl-goo { position: absolute; inset: -5rem -16rem; filter: url(#bl-goo); pointer-events: none; }
+.bl-drop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--tile) * var(--bs));
+  height: calc(var(--tile) * var(--bs));
+  margin: calc(var(--tile) * var(--bs) * -0.5) 0 0 calc(var(--tile) * var(--bs) * -0.5);
+  border-radius: 50%;
+  background: #04140a;
+  opacity: 0;
+  animation: bl-drop var(--bl-t) calc(var(--bl-d) + var(--bd)) infinite;
   will-change: transform, opacity;
 }
-.bl-dot {
-  display: inline-block;
-  animation: bl-dot var(--bl-t) var(--bl-d) infinite;
-  will-change: transform, opacity;
-}
-/* a letter squashes and lights up at the moment the ball lands on it (5% of the cycle per letter) */
-.bl-squash {
-  display: inline-block;
-  transform-origin: 50% 85%;
-  animation: bl-squash var(--bl-t) calc(var(--bl-d) + (0.42 + 0.05 * var(--k)) * var(--bl-t)) infinite;
-}
+.dark .bl-drop { background: #34d67b; }
 
-.bl-tile { box-shadow: 0 14px 34px -10px color-mix(in srgb, #34d67b 55%, transparent); }
-
-.bl-glow {
-  background: radial-gradient(closest-side, color-mix(in srgb, #34d67b 30%, transparent), transparent 75%);
+/* the glass logo tile */
+.bl-tile {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   opacity: 0;
-  animation: bl-glow var(--bl-t) var(--bl-d) infinite;
+  background: linear-gradient(145deg, #12361f 0%, #04140a 70%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.25),
+    0 16px 36px -12px color-mix(in srgb, #34d67b 60%, transparent);
+  animation: bl-tile var(--bl-t) var(--bl-d) infinite;
+  will-change: transform, opacity, border-radius;
 }
-
-.bl-spark {
+.dark .bl-tile {
+  background: linear-gradient(145deg, #6af5ad 0%, #25c76a 60%, #1aa957 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -8px 18px rgba(0, 60, 25, 0.28),
+    0 16px 40px -12px color-mix(in srgb, #34d67b 70%, transparent);
+}
+.bl-b {
+  font-size: calc(var(--tile) * 0.7);
+  font-weight: 800;
+  line-height: 1;
+  color: #34d67b;
+  transform: translateY(-0.05em);
+  /* the b has its own fade, in step with the tile, so it can never show before the tile has formed */
   opacity: 0;
-  box-shadow: 0 0 10px 2px #34d67b;
-  animation: bl-spark var(--bl-t) calc(var(--bl-d) + var(--sd)) infinite;
+  visibility: hidden;
+  animation: bl-b var(--bl-t) var(--bl-d) infinite;
 }
+.dark .bl-b { color: #04140a; }
+
+/* the band of light, clipped to the tile shape */
 .bl-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 29%;
+  pointer-events: none;
   opacity: 0;
-  background: linear-gradient(100deg, transparent 38%, color-mix(in srgb, #fff 55%, transparent) 50%, transparent 62%);
+  background: linear-gradient(100deg, transparent 38%, color-mix(in srgb, #fff 60%, transparent) 50%, transparent 62%);
   background-size: 250% 100%;
   background-position: 130% 0;
-  mix-blend-mode: soft-light;
   animation: bl-shine var(--bl-t) var(--bl-d) infinite;
-}
-
-/* the ball: x moves along the word, y does the hops (two elements, so the two moves do not fight) */
-.bl-ballx {
-  top: 0.1em;
-  left: 0;
-  width: 0.27em;
-  height: 0.27em;
-  margin-left: -0.135em;
-  opacity: 0;
-  animation: bl-ballx var(--bl-t) var(--bl-d) linear infinite;
-}
-.bl-bally {
-  box-shadow: 0 0 0.35em 0.09em #34d67b;
-  animation: bl-bally var(--bl-t) var(--bl-d) linear infinite;
 }
 
 @keyframes bl-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* scattered (0-3%) -> flies in and locks (3-22%) -> holds -> scatters (86-97%) */
-@keyframes bl-piece {
-  0%, 3% {
-    opacity: 0;
-    transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(0.55);
-    filter: blur(6px);
-    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.06);
-  }
-  22% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); filter: blur(0); animation-timing-function: linear; }
-  86% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); filter: blur(0); animation-timing-function: ease-in; }
-  97%, 100% {
-    opacity: 0;
-    transform: translate(calc(var(--x) * -0.45), calc(var(--y) * -1)) rotate(calc(var(--r) * -0.6)) scale(0.7);
-    filter: blur(5px);
-  }
-}
-
-/* the dot is not there until the ball arrives (72%), then it pops and stays */
-@keyframes bl-dot {
-  0%, 71% { opacity: 0; transform: scale(0.4); }
-  72% { opacity: 1; transform: scale(1.7); animation-timing-function: ease-out; }
-  77% { opacity: 1; transform: scale(1); }
-  86% { opacity: 1; transform: scale(1); animation-timing-function: ease-in; }
-  97%, 100% {
-    opacity: 0;
-    transform: translate(calc(var(--x) * -0.45), calc(var(--y) * -1)) rotate(calc(var(--r) * -0.6)) scale(0.7);
-  }
-}
-
-/* landing: squash flat, spring up, settle; the letter turns green for a moment */
-@keyframes bl-squash {
-  0%, 12%, 100% { transform: none; color: var(--ink); }
-  1.5% { transform: scale(1.18, 0.78); color: var(--accent); }
-  4% { transform: scale(0.94, 1.1); color: var(--accent); }
-  7% { transform: none; color: var(--accent); }
-}
-
-/* the logo is complete: a glow behind it */
-@keyframes bl-glow {
-  0%, 70% { opacity: 0; transform: scale(0.8); }
-  76% { opacity: 1; transform: scale(1.05); }
-  88% { opacity: 0.55; transform: scale(1); }
-  96%, 100% { opacity: 0; transform: scale(0.85); }
-}
-
-/* sparks: drift in from the sides while the pieces fly, and are gone once the logo is built */
-@keyframes bl-spark {
-  0% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.4); }
+/* a drop slides in (0-20%), swells as it fuses (24%), then the glass tile takes over (28%) */
+@keyframes bl-drop {
+  0%, 2% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0.5); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
   6% { opacity: 1; }
-  24% { opacity: 0.9; transform: translate(calc(var(--x) * 0.05), calc(var(--y) * 0.05)) scale(1); }
-  32%, 100% { opacity: 0; transform: translate(0, 0) scale(0.2); }
+  20% { opacity: 1; transform: translate(0, 0) scale(1); animation-timing-function: ease-out; }
+  24% { opacity: 1; transform: translate(0, 0) scale(1.12); }
+  28%, 100% { opacity: 0; transform: translate(0, 0) scale(1.2); }
 }
+
+/* round blob -> squircle, with a little overshoot */
+@keyframes bl-tile {
+  0%, 20% { opacity: 0; transform: scale(0.7); border-radius: 50%; animation-timing-function: cubic-bezier(0.34, 1.5, 0.64, 1); }
+  27% { opacity: 1; transform: scale(1); border-radius: 29%; }
+  86% { opacity: 1; transform: scale(1); border-radius: 29%; animation-timing-function: ease-in; }
+  96%, 100% { opacity: 0; transform: scale(0.8); border-radius: 50%; }
+}
+
+/* the b: hidden until the tile has formed (27%), hidden again when the tile dissolves */
+@keyframes bl-b {
+  0%, 24% { opacity: 0; visibility: hidden; }
+  25% { visibility: visible; }
+  27%, 86% { opacity: 1; visibility: visible; }
+  93%, 100% { opacity: 0; visibility: hidden; }
+}
+
 /* one soft band of light passes over the finished logo */
 @keyframes bl-shine {
-  0%, 77% { opacity: 0; background-position: 130% 0; }
-  79% { opacity: 1; }
-  89% { opacity: 1; background-position: -30% 0; }
-  91%, 100% { opacity: 0; background-position: -30% 0; }
-}
-
-/* the ball: x runs along the word (b, u, n, c, h, o, then the dot), y bounces between the landings */
-@keyframes bl-ballx {
-  0%, 36% { opacity: 0; left: -10%; }
-  38% { opacity: 1; left: -8%; }
-  42% { left: 7%; }
-  47% { left: 21%; }
-  52% { left: 36%; }
-  57% { left: 50%; }
-  62% { left: 65%; }
-  67% { left: 79%; }
-  72% { left: 95%; }
-  72.8%, 100% { opacity: 0; left: 95%; }
-}
-@keyframes bl-bally {
-  0%, 37% { transform: translateY(-1.1em); }
-  38% { transform: translateY(-1.1em); animation-timing-function: ease-in; }
-  42% { transform: translateY(0); animation-timing-function: ease-out; }
-  44.5% { transform: translateY(-0.55em); animation-timing-function: ease-in; }
-  47% { transform: translateY(0); animation-timing-function: ease-out; }
-  49.5% { transform: translateY(-0.55em); animation-timing-function: ease-in; }
-  52% { transform: translateY(0); animation-timing-function: ease-out; }
-  54.5% { transform: translateY(-0.55em); animation-timing-function: ease-in; }
-  57% { transform: translateY(0); animation-timing-function: ease-out; }
-  59.5% { transform: translateY(-0.55em); animation-timing-function: ease-in; }
-  62% { transform: translateY(0); animation-timing-function: ease-out; }
-  64.5% { transform: translateY(-0.55em); animation-timing-function: ease-in; }
-  67% { transform: translateY(0); animation-timing-function: ease-out; }
-  69.5% { transform: translateY(-0.55em); animation-timing-function: ease-in; }
-  72% { transform: translateY(0.72em); animation-timing-function: ease-out; }
-  100% { transform: translateY(0.72em); }
+  0%, 42% { opacity: 0; background-position: 130% 0; }
+  44% { opacity: 1; }
+  60% { opacity: 1; background-position: -30% 0; }
+  62%, 100% { opacity: 0; background-position: -30% 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* no flying: the finished logo, gently breathing */
-  .bl-piece, .bl-dot, .bl-squash { animation: none; filter: none; }
-  .bl-spark, .bl-shine, .bl-ballx { display: none; }
-  .bl-glow { opacity: 0.7; animation: bl-fade 1.8s ease-in-out infinite; }
+  /* no motion: the finished logo */
+  .bl-goo, .bl-shine { display: none; }
+  .bl-tile { opacity: 1; animation: none; border-radius: 29%; }
+  .bl-b { opacity: 1; visibility: visible; animation: none; }
 }
-@keyframes bl-fade { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
