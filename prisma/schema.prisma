@@ -130,7 +130,7 @@ model User {
 
 // A Topic is one tab of a question document (/docs/<category>/<topic slug>). The admin writes the document in the
 // editor; every Heading 2 in `content` is a question and is mirrored into a Problem row (see lib/docs/store.js).
-// Slugs: AI/ML topics have plain slugs, HR topics start with "hr-" and SQL topics with "sql-" (see lib/categories.js).
+// Slugs: AI/ML topics have plain slugs, HR topics start with "hr-", SQL topics with "sql-" and Core topics with "core-" (see lib/categories.js).
 model Topic {
   id          String    @id @default(cuid())
   slug        String    @unique

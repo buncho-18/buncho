@@ -35,9 +35,16 @@ const COPY = {
     h1: 'SQL interview questions for AI engineers',
     schemaName: 'SQL interview questions for AI and data engineering roles',
   },
+  core: {
+    metaTitle: 'Core CS Interview Questions: Java, DBMS, CN and OS',
+    metaDescription:
+      'Core computer science interview questions on Java, DBMS, computer networks (CN) and operating systems (OS). Read the question and practise your answer in your own words.',
+    h1: 'Core CS interview questions: Java, DBMS, CN and OS',
+    schemaName: 'Core computer science interview questions on Java, DBMS, CN and OS',
+  },
 };
 
-/** generateMetadata for /problems, /problems/ai, /problems/hr and /problems/sql */
+/** generateMetadata for /problems, /problems/ai, /problems/hr, /problems/sql and /problems/core */
 export async function categoryMetadata(category, searchParams) {
   const copy = COPY[category];
   const path = CATEGORIES[category].path;
@@ -61,7 +68,7 @@ export default async function CategoryPage({ category, searchParams }) {
   const user = await getOrCreateUser();
   const [stats, ads, counts] = await Promise.all([
     getUserStats(user?.id ?? null, category),
-    getLiveAds(), // the sponsor banners show on every category (AI/ML, HR and SQL)
+    getLiveAds(), // the sponsor banners show on every category (AI/ML, HR, SQL and Core)
     getCategoryCounts(),
   ]);
   const params = {};
@@ -82,7 +89,7 @@ export default async function CategoryPage({ category, searchParams }) {
     }),
   );
 
-  const navItems = ['ai', 'hr', 'sql'].map((key) => ({
+  const navItems = ['ai', 'hr', 'sql', 'core'].map((key) => ({
     key,
     label: CATEGORIES[key].label,
     href: CATEGORIES[key].path,

@@ -138,7 +138,7 @@ function relevance(skill, p) {
 export async function buildPlan(skills, { pro = false } = {}) {
   const problems = await prisma.problem.findMany({
     // Pro-only questions are only planned for Pro users, so a free plan never links to a locked question.
-    // HR and SQL questions are never planned against a job description (they are not part of the AI/ML role plans).
+    // HR, SQL and Core questions are never planned against a job description (they are not part of the AI/ML role plans).
     where: { published: true, topic: topicCategoryWhere('ai'), ...(pro ? {} : { proOnly: false }) },
     select: {
       id: true, title: true, subcategory: true, description: true, difficulty: true, estimatedMinutes: true,

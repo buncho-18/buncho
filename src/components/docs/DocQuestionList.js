@@ -9,7 +9,7 @@ import { Companies, Frequency, InsightsInline } from '@/components/Insights';
 import DifficultyBadge from '@/components/DifficultyBadge';
 import RowCheck from './RowCheck';
 
-// The list on /problems, /problems/hr and /problems/sql. All three are identical: topics (the tabs of the
+// The list on /problems, /problems/hr, /problems/sql and /problems/core. All of them are identical: topics (the tabs of the
 // document) with their questions one under another. A question links to its own page (the question and its answer).
 export default async function DocQuestionList({ category, userId, admin }) {
   const topics = await getDocQuestions(category);

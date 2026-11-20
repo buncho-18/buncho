@@ -58,9 +58,9 @@ function ChipGroup({ label, value, options, onChange }) {
  * solved: number | null. When null, only the problem count is shown.
  */
 export default function ProblemFilters({ topics = [], subcategories = [], signedIn = false, solved = null, total = 0, category = 'ai' }) {
-  const single = category === 'hr' || category === 'sql'; // no chips built from the Topic table
+  const single = category === 'hr' || category === 'sql' || category === 'core'; // no chips built from the Topic table
   const noType = category === 'hr';
-  const useSubs = category === 'sql' && subcategories.length > 0;
+  const useSubs = (category === 'sql' || category === 'core') && subcategories.length > 0;
   const subTotal = subcategories.reduce((sum, s) => sum + s.count, 0);
   const router = useRouter();
   const pathname = usePathname();
@@ -160,7 +160,7 @@ export default function ProblemFilters({ topics = [], subcategories = [], signed
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder={category === 'hr' ? 'Search HR questions' : category === 'sql' ? 'Search SQL questions' : 'Search questions'}
+            placeholder={category === 'hr' ? 'Search HR questions' : category === 'sql' ? 'Search SQL questions' : category === 'core' ? 'Search Core questions' : 'Search questions'}
             className="h-11 w-full rounded-xl border border-line bg-surface pl-10 pr-3 text-base outline-none transition-colors placeholder:text-muted hover:border-muted focus:border-muted md:h-10 md:text-sm"
           />
         </div>

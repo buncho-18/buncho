@@ -538,7 +538,7 @@ function CreatorCard() {
 export default async function LandingPage() {
   let total = 0;
   try {
-    total = await getTotalProblemCount(); // every published question: AI + HR + SQL
+    total = await getTotalProblemCount(); // every published question: AI + HR + SQL + Core
   } catch {
     // The page should still render if the database is unreachable
   }

@@ -24,6 +24,7 @@ function refresh() {
   revalidatePath('/problems');
   revalidatePath('/problems/hr');
   revalidatePath('/problems/sql');
+  revalidatePath('/problems/core');
   revalidatePath('/dashboard');
 }
 

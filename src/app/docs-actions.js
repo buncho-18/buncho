@@ -139,6 +139,7 @@ function refreshAll(category, slug) {
   revalidatePath('/problems');
   revalidatePath('/problems/hr');
   revalidatePath('/problems/sql');
+  revalidatePath('/problems/core');
   revalidatePath(`/docs/${category}`);
   if (slug) revalidatePath(`/docs/${category}/${slug}`);
   revalidatePath('/dashboard');
@@ -149,6 +150,7 @@ function refreshAll(category, slug) {
   revalidatePath('/problems/ai/[slug]', 'page');
   revalidatePath('/problems/hr/[slug]', 'page');
   revalidatePath('/problems/sql/[slug]', 'page');
+  revalidatePath('/problems/core/[slug]', 'page');
   revalidatePath('/sitemap.xml');
   revalidatePath('/');
 }

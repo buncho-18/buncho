@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bookmark, Book, Database, Grid, Users, FileText } from '../icons';
+import { Bookmark, Book, Code, Database, Grid, Users, FileText } from '../icons';
 
-const ICONS = { ai: Book, hr: Users, sql: Database };
+const ICONS = { ai: Book, hr: Users, sql: Database, core: Code };
 
 /**
  * Floating icon-only navigation pill for the /problems pages (desktop, lg and up).
- * - Top group: the question types (AI/ML, HR, SQL), the active one is highlighted.
+ * - Top group: the question types (AI/ML, HR, SQL, Core), the active one is highlighted.
  * - Divider, then shortcuts: Dashboard, Saved for later, Job prep.
  * - Hover or keyboard focus on an icon shows its label in a tooltip to the right.
  *

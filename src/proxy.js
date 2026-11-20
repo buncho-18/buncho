@@ -33,6 +33,7 @@ export const config = {
     '/problems/ai',
     '/problems/hr',
     '/problems/sql',
+    '/problems/core',
     '/dashboard/:path*',
     '/admin/:path*',
     '/jobs/:path*',

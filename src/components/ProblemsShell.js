@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { Book, Database, Users } from './icons';
+import { Book, Code, Database, Users } from './icons';
 import ProblemsRail from './problems/ProblemsRail';
 
-const ICONS = { ai: Book, hr: Users, sql: Database };
+const ICONS = { ai: Book, hr: Users, sql: Database, core: Code };
 
 /**
  * Shell for the question library.
@@ -26,9 +26,10 @@ export default function ProblemsShell({ items, children }) {
     activeRef.current?.scrollIntoView({ inline: 'center', block: 'nearest' });
   }, [pathname]);
 
-  // AI problems live at /problems (and /problems/ai); HR questions at /problems/hr; SQL questions at /problems/sql
+  // AI problems live at /problems (and /problems/ai); HR questions at /problems/hr; SQL questions at /problems/sql;
+  // Core (Java, DBMS, CN, OS) questions at /problems/core
   const under = (base) => pathname === base || pathname.startsWith(`${base}/`);
-  const section = under('/problems/hr') ? 'hr' : under('/problems/sql') ? 'sql' : 'ai';
+  const section = under('/problems/hr') ? 'hr' : under('/problems/sql') ? 'sql' : under('/problems/core') ? 'core' : 'ai';
   const isOn = (it) => it.key === section;
 
   return (

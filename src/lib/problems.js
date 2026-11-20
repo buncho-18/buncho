@@ -341,7 +341,7 @@ export function parseFilters(sp = {}) {
 }
 
 // userId is only needed for the solved / not solved filter; signed-out visitors have no progress, so it is ignored.
-// category: 'ai' (default, every non-HR / non-SQL topic) | 'hr' | 'sql' | 'all'
+// category: 'ai' (default, every non-HR / non-SQL / non-Core topic) | 'hr' | 'sql' | 'core' | 'all'
 export async function getProblems({ q, topic, sub, company, difficulty, type, access, status, page, challenge, category = 'ai', pro = false, userId = null }) {
   const topicFilters = [topic && { slug: topic }, topicCategoryWhere(category)].filter(Boolean);
   const where = {
@@ -428,7 +428,7 @@ export async function getSubcategories({ category = 'sql' } = {}) {
     .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
 }
 
-/** Every published question across all categories (AI, HR, SQL and any added later). Used for the home page stat. */
+/** Every published question across all categories (AI, HR, SQL, Core and any added later). Used for the home page stat. */
 // Cached for an hour (it only feeds a number on the home page), so a visit does not cost a database query.
 export const getTotalProblemCount = unstable_cache(
   () => prisma.problem.count({ where: { published: true } }),
@@ -438,10 +438,10 @@ export const getTotalProblemCount = unstable_cache(
 
 /** Published question counts per category, for the sidebar on /problems. */
 export async function getCategoryCounts() {
-  const [ai, hr, sql] = await Promise.all(
-    ['ai', 'hr', 'sql'].map((c) => prisma.problem.count({ where: { published: true, topic: topicCategoryWhere(c) } })),
+  const [ai, hr, sql, core] = await Promise.all(
+    ['ai', 'hr', 'sql', 'core'].map((c) => prisma.problem.count({ where: { published: true, topic: topicCategoryWhere(c) } })),
   );
-  return { ai, hr, sql };
+  return { ai, hr, sql, core };
 }
 
 /**
@@ -500,12 +500,12 @@ export function dayKey(date) {
  * Progress numbers for the rings, bars and streak. Works signed out too
  * (userId null): totals are filled in, everything personal stays at zero.
  */
-// category: 'all' (default, used by the dashboard and profiles) | 'ai' | 'hr' | 'sql'
+// category: 'all' (default, used by the dashboard and profiles) | 'ai' | 'hr' | 'sql' | 'core'
 export async function getUserStats(userId, category = 'all') {
   const topic = topicCategoryWhere(category);
   const [totals, rows] = await Promise.all([
     prisma.problem.groupBy({ by: ['difficulty'], where: { published: true, ...(topic && { topic }) }, _count: { _all: true } }),
-    // Rows from EVERY category are read on purpose: the streak and activity days are shared by the AI/ML, HR and SQL
+    // Rows from EVERY category are read on purpose: the streak and activity days are shared by the AI/ML, HR, SQL and Core
     // pages. Only the solved counts below are limited to `category`.
     userId
       ? prisma.problemProgress.findMany({

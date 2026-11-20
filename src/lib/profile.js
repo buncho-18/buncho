@@ -105,7 +105,7 @@ export const getProfileData = cache(async (user) => {
           select: { problemId: true, problem: { select: { difficulty: true, topic: { select: { name: true, slug: true } } } } },
         })
       : [],
-    // Published questions per category (AI/ML, HR, SQL), to show "solved of total". Only questions that live in a document count.
+    // Published questions per category (AI/ML, HR, SQL, Core), to show "solved of total". Only questions that live in a document count.
     user.showStats
       ? Promise.all(Object.keys(CATEGORIES).map((key) => prisma.problem.count({ where: { published: true, topic: { ...topicCategoryWhere(key), content: { not: null } } } })))
       : [],
@@ -117,7 +117,7 @@ export const getProfileData = cache(async (user) => {
 
   // Strength per topic: solved count
   const byTopic = new Map();
-  // Same numbers one level up: per category (AI/ML, HR, SQL) instead of per sub-topic
+  // Same numbers one level up: per category (AI/ML, HR, SQL, Core) instead of per sub-topic
   const byCategory = new Map(Object.keys(CATEGORIES).map((key, i) => [key, { key, solved: 0, total: totals[i] ?? 0 }]));
   let hard = 0;
   completed.forEach((c) => {

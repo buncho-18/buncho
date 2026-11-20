@@ -75,8 +75,8 @@ export default async function AdminHomePage() {
       href: '/docs/ai',
       icon: 'docs',
       title: 'Question documents',
-      text: 'Write, edit and delete questions. AI/ML is at /docs/ai, HR at /docs/hr and SQL at /docs/sql. Each tab is a topic and each Heading 2 is a question.',
-      stat: 'AI · HR · SQL',
+      text: 'Write, edit and delete questions. AI/ML is at /docs/ai, HR at /docs/hr, SQL at /docs/sql and Core (Java, DBMS, CN, OS) at /docs/core. Each tab is a topic and each Heading 2 is a question.',
+      stat: 'AI · HR · SQL · Core',
     },
     {
       href: '/admin/users',
@@ -113,6 +113,7 @@ export default async function AdminHomePage() {
   const quick = [
     { href: '/docs/hr', label: 'Edit HR questions' },
     { href: '/docs/sql', label: 'Edit SQL questions' },
+    { href: '/docs/core', label: 'Edit Core questions' },
     { href: '/admin/users/export', label: 'Download all users (CSV)', plain: true },
     { href: '/pricing', label: 'View pricing page' },
     { href: '/advertise', label: 'View advertise page' },

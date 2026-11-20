@@ -114,7 +114,7 @@ import { prisma } from '@/lib/prisma';
 import { topicCategoryWhere } from '@/lib/categories';
 import { extractQuestions } from './tree';
 
-const PREFIX = { ai: '', hr: 'hr-', sql: 'sql-' };
+const PREFIX = { ai: '', hr: 'hr-', sql: 'sql-', core: 'core-' };
 
 export const DEFAULT_SETTINGS = { headingFont: 'serif', textFont: 'sans', wide: false };
 
@@ -135,10 +135,10 @@ const slugify = (s) =>
     .replace(/^-+|-+$/g, '')
     .slice(0, 48) || 'tab';
 
-/** A free slug for a new tab: hr-/sql- prefix for those categories, and AI slugs can never look like HR/SQL ones. */
+/** A free slug for a new tab: hr-/sql-/core- prefix for those categories, and AI slugs can never look like HR/SQL/Core ones. */
 export async function makeTabSlug(category, name) {
   let base = slugify(name);
-  if (category === 'ai' && (base === 'hr' || base === 'sql' || base.startsWith('hr-') || base.startsWith('sql-'))) base = `ai-${base}`;
+  if (category === 'ai' && ['hr', 'sql', 'core'].some((p) => base === p || base.startsWith(`${p}-`))) base = `ai-${base}`;
   const root = `${PREFIX[category]}${base}`;
   let slug = root;
   for (let i = 2; await prisma.topic.findUnique({ where: { slug }, select: { id: true } }); i += 1) slug = `${root}-${i}`;

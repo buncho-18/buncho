@@ -1,5 +1,5 @@
 import SideLink from './SideLink';
-import { Book, Database, Grid, Tag, Bookmark, Users } from './icons';
+import { Book, Code, Database, Grid, Tag, Bookmark, Users } from './icons';
 
 // Three-column shell used by topic pages:
 // left navigation, main content, optional right rail (progress, streak).
@@ -12,6 +12,7 @@ export default function LibraryLayout({ topics = [], rail, children }) {
             <SideLink href="/problems" exact icon={<Book width={18} height={18} />}>AI/ML problems</SideLink>
             <SideLink href="/problems/hr" icon={<Users width={18} height={18} />}>HR questions</SideLink>
             <SideLink href="/problems/sql" icon={<Database width={18} height={18} />}>SQL questions</SideLink>
+            <SideLink href="/problems/core" icon={<Code width={18} height={18} />}>Core questions</SideLink>
             <SideLink href="/dashboard" icon={<Grid width={18} height={18} />}>Dashboard</SideLink>
             <SideLink href="/dashboard#saved" exact icon={<Bookmark width={18} height={18} />}>Saved for later</SideLink>
           </nav>

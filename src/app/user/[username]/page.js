@@ -232,9 +232,9 @@ export default async function PublicProfilePage({ params }) {
     user.xHandle && { href: `https://x.com/${user.xHandle}`, label: 'X' },
   ].filter(Boolean);
 
-  // Skill map = one card per category (AI/ML, HR, SQL), only those the user has practised
+  // Skill map = one card per category (AI/ML, HR, SQL, Core), only those the user has practised
   const practised = data.categories.filter((c) => c.solved > 0);
-  // Radar always has the same 3 axes: AI/ML, HR, SQL (value = percent of that category solved)
+  // Radar always has the same 4 axes: AI/ML, HR, SQL, Core (value = percent of that category solved)
   const radarData = data.categories.map((c) => ({ slug: c.key, name: c.label, avg: c.total ? Math.round((c.solved / c.total) * 100) : 0 }));
   const hasAnything = Boolean(stats);
 
