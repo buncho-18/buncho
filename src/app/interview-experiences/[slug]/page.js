@@ -31,6 +31,7 @@ export async function generateMetadata({ params }) {
     title: exp.title,
     description: truncate(exp.summary, 155),
     path: `/interview-experiences/${exp.slug}`,
+    image: `/interview-experiences/${exp.slug}/opengraph-image`,
   });
 }
 
