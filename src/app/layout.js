@@ -295,6 +295,8 @@ const themeScript = `(function(){try{var t=localStorage.getItem('buncho-theme');
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider
+      signInUrl="/login"
+      signUpUrl="/register"
       appearance={clerkAppearance}
       afterSignOutUrl="/"
     >
