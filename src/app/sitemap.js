@@ -12,6 +12,7 @@ const PRIVACY_UPDATED = new Date('2026-10-22');
 
 export default async function sitemap() {
   const now = new Date();
+  const experiences = await getAllExperiences();
   const entries = [
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_URL}/problems`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
@@ -19,7 +20,7 @@ export default async function sitemap() {
     { url: `${SITE_URL}/problems/sql`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/problems/core`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/interview-experiences`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-    ...getAllExperiences().map((e) => ({
+    ...experiences.map((e) => ({
       url: `${SITE_URL}/interview-experiences/${e.slug}`,
       // lastModified: new Date(`${e.date}-01`), 
       lastModified: new Date(e.date),

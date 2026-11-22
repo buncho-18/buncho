@@ -124,6 +124,8 @@ model User {
   supportReports   SupportReport[]
   // Sponsor banners
   adBookings       AdBooking[]
+  // Interview experiences shared by the user (/interview-experiences/new)
+  interviewExperiences InterviewExperience[]
 
   @@index([email])
 }
@@ -461,4 +463,38 @@ model SiteStats {
   asOf                  DateTime?
   syncError             String?
   updatedAt             DateTime  @updatedAt
+}
+
+/* ---------- Community interview experiences (/interview-experiences/new) ---------- */
+
+// An interview experience written by a user. Shown next to the curated ones from src/data/interview-experiences.json.
+// `rounds` is a JSON array in the same shape as the JSON file: [{ id, title, type, mode, duration, summary, questions: [{ id, text, topic, difficulty, solution }] }]
+// Set published = false to hide one (for example from Prisma Studio) without deleting it.
+model InterviewExperience {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyName   String
+  companyType   String?
+  location      String?
+  role          String
+  level         String // "Full-time" | "Internship"
+  date          String // "YYYY-MM"
+  outcome       String // "Selected" | "Rejected" | "Waitlisted" | "Awaiting Result"
+  difficulty    Difficulty
+  totalDuration String?
+  summary       String   @db.Text
+  anonymous     Boolean  @default(false)
+  background    String?
+  rounds        Json
+  tips          Json     @default("[]")
+  published     Boolean  @default(true)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([published, createdAt])
+  @@index([userId, createdAt])
 }

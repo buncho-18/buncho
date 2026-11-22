@@ -6,7 +6,7 @@ import {
   countQuestions,
   difficultyCounts,
   formatMonth,
-  getAllExperiences,
+  getCuratedSlugs,
   getExperience,
   hardestOf,
 } from '@/lib/interview-experiences';
@@ -15,14 +15,17 @@ import { BackLink } from '@/components/jobs/ui';
 import { ChevronDown } from '@/components/icons';
 import JsonLd from '@/components/JsonLd';
 
-// Pre-render every experience at build time. Data comes from src/data/interview-experiences.json.
+// Curated experiences (src/data/interview-experiences.json) are pre-rendered at build time.
+// Community experiences are rendered on their first visit, then cached and refreshed every minute.
+export const revalidate = 60;
+
 export function generateStaticParams() {
-  return getAllExperiences().map((e) => ({ slug: e.slug }));
+  return getCuratedSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const exp = getExperience(slug);
+  const exp = await getExperience(slug);
   if (!exp) return { robots: { index: false, follow: true } };
   return buildMetadata({
     title: exp.title,
@@ -50,7 +53,7 @@ function SolutionLink({ solution }) {
 
 export default async function ExperiencePage({ params }) {
   const { slug } = await params;
-  const exp = getExperience(slug);
+  const exp = await getExperience(slug);
   if (!exp) notFound();
 
   const counts = difficultyCounts(exp);
@@ -81,7 +84,7 @@ export default async function ExperiencePage({ params }) {
           <CompanyMark name={exp.company.name} size={56} />
           <div className="min-w-0">
             <h1 className="font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">{exp.role}</h1>
-            <p className="text-sm text-muted">{exp.company.name} · {exp.company.location} · {formatMonth(exp.date)}</p>
+            <p className="text-sm text-muted">{[exp.company.name, exp.company.location, formatMonth(exp.date)].filter(Boolean).join(' · ')}</p>
           </div>
         </div>
 
@@ -90,10 +93,9 @@ export default async function ExperiencePage({ params }) {
             {exp.outcome}
           </span>
           <DifficultyMeter level={exp.difficulty} />
-          
         </div>
 
-        <p className="mt-5 leading-relaxed text-muted">{exp.summary}</p>
+        <p className="mt-5 whitespace-pre-line leading-relaxed text-muted">{exp.summary}</p>
         <p className="mt-2 text-xs text-muted">Shared by {exp.candidate.name} · {exp.candidate.background}</p>
       </header>
 
@@ -146,14 +148,14 @@ export default async function ExperiencePage({ params }) {
                 </summary>
 
                 <div className="border-t border-line px-5 pb-2 pt-4">
-                  <p className="text-sm leading-relaxed text-muted">{r.summary}</p>
+                  {r.summary && <p className="whitespace-pre-line text-sm leading-relaxed text-muted">{r.summary}</p>}
 
                   <ol className="mt-3 divide-y divide-line">
                     {r.questions.map((q, i) => (
                       <li key={q.id} className="flex gap-3 py-4">
                         <span className={`mt-2 h-2 w-2 shrink-0 rounded-full ${TONE_BG[q.difficulty]}`} title={q.difficulty.toLowerCase()} />
                         <div className="min-w-0 flex-1">
-                          <p className="leading-relaxed">
+                          <p className="whitespace-pre-line leading-relaxed">
                             <span className="mr-1.5 font-semibold text-muted">Q{i + 1}.</span>
                             {q.text}
                           </p>
@@ -171,6 +173,13 @@ export default async function ExperiencePage({ params }) {
           );
         })}
       </ol>
+
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-5">
+        <p className="text-sm text-muted">Interviewed recently? Help the next candidate.</p>
+        <Link href="/interview-experiences/new" className="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-ink hover:opacity-90">
+          Share your experience
+        </Link>
+      </div>
 
       {/* Tips */}
       {exp.tips?.length > 0 && (

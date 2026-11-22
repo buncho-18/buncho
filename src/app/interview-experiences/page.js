@@ -23,7 +23,7 @@ export const metadata = buildMetadata({
 
 export default async function InterviewExperiencesPage({ searchParams }) {
   const { level = 'all' } = await searchParams;
-  const all = getAllExperiences();
+  const all = await getAllExperiences();
   const list = level === 'all' ? all : all.filter((e) => e.level === level);
 
   const stats = [
@@ -52,6 +52,12 @@ export default async function InterviewExperiencesPage({ searchParams }) {
         <p className="mt-4 text-muted">
           Real questions from AI Engineer interviews, grouped by round, with a link to practise each one.
         </p>
+        <Link
+          href="/interview-experiences/new"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90"
+        >
+          <span aria-hidden="true">+</span> Share your experience
+        </Link>
       </header>
 
       {/* Stats */}
@@ -84,7 +90,10 @@ export default async function InterviewExperiencesPage({ searchParams }) {
       </nav>
 
       {list.length === 0 ? (
-        <p className="mt-10 text-muted">No experiences here yet. Check back soon.</p>
+        <p className="mt-10 text-muted">
+          No experiences here yet.{' '}
+          <Link href="/interview-experiences/new" className="font-semibold text-accent underline underline-offset-4">Be the first to share one.</Link>
+        </p>
       ) : (
         <ul className="mt-6 grid gap-5 md:grid-cols-2">
           {list.map((e) => (
@@ -97,7 +106,10 @@ export default async function InterviewExperiencesPage({ searchParams }) {
                   <CompanyMark name={e.company.name} />
                   <div className="min-w-0 flex-1">
                     <h2 className="font-display text-lg font-semibold leading-snug">{e.role}</h2>
-                    <p className="truncate text-sm text-muted">{e.company.name} · {formatMonth(e.date)}</p>
+                    <p className="truncate text-sm text-muted">
+                      {e.company.name} · {formatMonth(e.date)}
+                      {e.community && <span className="ml-2 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium">Community</span>}
+                    </p>
                   </div>
                   <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${OUTCOME_TONE[e.outcome] ?? 'bg-surface-2 text-muted'}`}>
                     {e.outcome}
@@ -112,7 +124,6 @@ export default async function InterviewExperiencesPage({ searchParams }) {
                   <span className="flex items-center gap-3">
                     <DifficultyMeter level={e.difficulty} />
                     <span className="text-muted">{countQuestions(e)} questions</span>
-          
                   </span>
                   <ChevronRight width={18} height={18} className="text-muted transition-transform group-hover:translate-x-1 group-hover:text-accent" />
                 </div>
