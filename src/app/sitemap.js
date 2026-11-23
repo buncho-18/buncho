@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { SITE_URL } from '@/lib/seo';
-import { docHref } from '@/lib/categories';
+import { problemHref } from '@/lib/categories';
 import { getAllExperiences } from '@/lib/interview-experiences';
 
 // Rebuilt at most once an hour, so new problems show up without hitting the database on every crawl.
@@ -19,13 +19,12 @@ export default async function sitemap() {
     { url: `${SITE_URL}/problems/hr`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/problems/sql`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/problems/core`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${SITE_URL}/interview-experiences`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${SITE_URL}/interview-experiences`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     ...experiences.map((e) => ({
       url: `${SITE_URL}/interview-experiences/${e.slug}`,
-      // lastModified: new Date(`${e.date}-01`), 
       lastModified: new Date(e.date),
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.7,
     })),
     { url: `${SITE_URL}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/terms`, lastModified: TERMS_UPDATED, changeFrequency: 'yearly', priority: 0.3 },
@@ -33,11 +32,12 @@ export default async function sitemap() {
   ];
 
   try {
-    const [problems, profiles] = await Promise.all([
-      // One entry per document tab (a question is an anchor inside its tab, so it has no URL of its own)
-      prisma.topic.findMany({
-        where: { content: { not: null } },
-        select: { slug: true, updatedAt: true },
+    const [questions, profiles] = await Promise.all([
+      // One entry per FREE question page (/problems/<slug>). Pro-only pages only show a teaser,
+      // which Google treats as thin content, so they stay out of the sitemap.
+      prisma.problem.findMany({
+        where: { published: true, proOnly: false },
+        select: { slug: true, updatedAt: true, topic: { select: { slug: true } } },
         orderBy: { updatedAt: 'desc' },
       }),
       // Public profiles with at least one solved problem (empty profiles are noindex, so keep them out)
@@ -45,16 +45,21 @@ export default async function sitemap() {
         where: { username: { not: null }, profilePublic: true, showStats: true, progress: { some: { status: 'COMPLETED' } } },
         select: { username: true, updatedAt: true },
         orderBy: { updatedAt: 'desc' },
-        take: 5000,
+        take: 500,
       }),
     ]);
 
-    profiles.forEach((u) => {
-      entries.push({ url: `${SITE_URL}/user/${u.username}`, lastModified: u.updatedAt, changeFrequency: 'weekly', priority: 0.4 });
+    questions.forEach((q) => {
+      entries.push({
+        url: `${SITE_URL}${problemHref(q.slug, q.topic.slug)}`,
+        lastModified: q.updatedAt,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      });
     });
 
-    problems.forEach((t) => {
-      entries.push({ url: `${SITE_URL}${docHref(t.slug)}`, lastModified: t.updatedAt, changeFrequency: 'weekly', priority: 0.7 });
+    profiles.forEach((u) => {
+      entries.push({ url: `${SITE_URL}/user/${u.username}`, lastModified: u.updatedAt, changeFrequency: 'weekly', priority: 0.3 });
     });
   } catch (err) {
     // If the database is unreachable the static pages are still returned instead of failing the build
