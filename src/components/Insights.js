@@ -84,9 +84,10 @@ export function InsightsPanel({ pro, problem }) {
       <Link
         href="/pricing"
         title={LOCK_TITLE}
-        className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-line px-3 py-1 text-xs font-medium text-muted transition-colors hover:border-accent hover:text-accent"
+        className="inline-flex h-7 items-center gap-1.5 rounded-full border border-dashed border-line px-2.5 text-xs font-medium text-muted transition-colors hover:border-accent hover:text-accent sm:h-8 sm:px-3"
       >
-        <Lock width={12} height={12} /> Unlock asked % and companies
+        <Lock width={12} height={12} /> <span className="sm:hidden">Asked % &amp; companies</span>
+        <span className="hidden sm:inline">Unlock asked % and companies</span>
       </Link>
     );
   }
@@ -96,7 +97,7 @@ export function InsightsPanel({ pro, problem }) {
   return (
     <>
       {hasF && (
-        <span className="inline-flex items-center gap-2 rounded-full bg-surface-2 px-3 py-1 text-xs" title={`Asked in about ${f}% of reported interviews`}>
+        <span className="inline-flex h-7 items-center gap-2 rounded-full bg-surface-2 px-2.5 text-xs sm:h-8 sm:px-3" title={`Asked in about ${f}% of reported interviews`}>
           <span className="font-semibold tabular-nums">{f}%</span>
           <span className="text-muted">asked</span>
           <span aria-hidden="true" className="h-1 w-8 overflow-hidden rounded-full bg-line">
@@ -105,7 +106,7 @@ export function InsightsPanel({ pro, problem }) {
         </span>
       )}
       {names.map((n) => (
-        <span key={n} className="rounded-full border border-line px-3 py-1 text-xs font-medium">{n}</span>
+        <span key={n} className="inline-flex h-7 items-center rounded-full border border-line px-2.5 text-xs font-medium sm:h-8 sm:px-3">{n}</span>
       ))}
     </>
   );

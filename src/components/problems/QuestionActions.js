@@ -12,14 +12,15 @@ export default function QuestionActions({ problemId, completed, bookmarked, sign
   const [pending, start] = useTransition();
   const [error, setError] = useState(null);
 
-  const base = 'inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors disabled:opacity-60';
-  const idle = 'border-line text-muted hover:bg-surface-2 hover:text-ink';
-  const on = 'border-line bg-surface-2 text-ink';
+  const base = 'inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-xs font-medium transition-colors disabled:opacity-60 sm:h-8 sm:px-3.5';
+  const idle = 'border-line bg-surface text-muted hover:bg-surface-2 hover:text-ink';
+  const on = 'border-accent/40 bg-accent-soft text-ink';
 
   if (!signedIn) {
     return (
       <Link href="/login" className={`${base} ${idle}`}>
-        <Check width={14} height={14} /> Log in to track progress
+        <Check width={14} height={14} /> <span className="sm:hidden">Log in to track</span>
+        <span className="hidden sm:inline">Log in to track progress</span>
       </Link>
     );
   }

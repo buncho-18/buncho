@@ -11,7 +11,9 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-const MIN_AUTO = 112; // px, narrowest a column starts out
+const MIN_AUTO = 112; // px, narrowest a column starts out (on a laptop)
+const MIN_AUTO_PHONE = 72; // px, same on a phone, so a short column such as "Term" does not waste the width
+const minAuto = () => (typeof window !== 'undefined' && window.innerWidth < 640 ? MIN_AUTO_PHONE : MIN_AUTO);
 const MIN_DRAG = 56; // px, narrowest a reader can drag a column
 const MAX_AUTO = 460; // px, a long text column starts at most this wide (it wraps)
 const KEY = 'doc-tables-v1';
@@ -77,7 +79,8 @@ function measure(table) {
 
 // Turns the wanted widths into real ones for the room available
 function fit(natural, available) {
-  const want = natural.map((w) => Math.min(MAX_AUTO, Math.max(MIN_AUTO, Math.ceil(w))));
+  const MIN = minAuto();
+  const want = natural.map((w) => Math.min(MAX_AUTO, Math.max(MIN, Math.ceil(w))));
   const total = sum(want);
   if (total <= available) {
     // Room to spare: share it out in proportion, so the table fills the page like a normal table
@@ -85,7 +88,7 @@ function fit(natural, available) {
     return want.map((w) => Math.floor(w + (extra * w) / total));
   }
   // Too wide: short columns keep what they need, the long ones split what is left
-  const out = Array(want.length).fill(MIN_AUTO);
+  const out = Array(want.length).fill(MIN);
   let left = available;
   let open = want.map((_, i) => i);
   while (open.length) {
@@ -93,7 +96,7 @@ function fit(natural, available) {
     const small = open.filter((i) => want[i] <= share);
     if (!small.length) {
       open.forEach((i) => {
-        out[i] = Math.max(MIN_AUTO, Math.floor(share));
+        out[i] = Math.max(MIN, Math.floor(share));
       });
       break;
     }
@@ -138,9 +141,9 @@ function setup(root, tableId) {
     let widths = null;
     let custom = Array.isArray(saved[id]) && saved[id].length === cols;
 
-    const available = () => Math.max(MIN_AUTO * 2, wrap.clientWidth - 2);
+    const available = () => Math.max(minAuto() * 2, wrap.clientWidth - 2);
     const autoFit = () => fit(measure(table), available());
-    widths = custom ? saved[id].map((w) => Math.max(MIN_DRAG, Number(w) || MIN_AUTO)) : autoFit();
+    widths = custom ? saved[id].map((w) => Math.max(MIN_DRAG, Number(w) || minAuto())) : autoFit();
     paint(table, widths);
 
     // One drag edge per column, on the first row

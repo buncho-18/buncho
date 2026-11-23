@@ -53,7 +53,7 @@ export default function QuestionControls({ prevHref, nextHref }) {
       onClick={toggle}
       aria-pressed={focus}
       title="Focus mode (F)"
-      className={`hidden h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors lg:inline-flex ${
+      className={`hidden h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium transition-colors lg:inline-flex ${
         focus ? 'border-line bg-surface-2 text-ink' : 'border-line text-muted hover:bg-surface-2 hover:text-ink'
       }`}
     >
