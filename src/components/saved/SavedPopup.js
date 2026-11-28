@@ -115,7 +115,7 @@ export default function SavedPopup({ variant = 'bar', label = 'Saved for later',
         aria-haspopup="dialog"
         aria-label={label}
         title={label}
-        className={`flex h-full w-12 shrink-0 items-center justify-center rounded-2xl border border-line bg-surface text-sm font-medium transition-colors hover:border-muted sm:w-auto sm:gap-2 sm:px-4 ${className}`}
+        className={`flex min-h-[3.25rem] w-12 shrink-0 self-stretch items-center justify-center rounded-2xl border border-line bg-surface text-sm font-medium transition-colors hover:border-muted sm:w-auto sm:gap-2 sm:px-4 ${className}`}
       >
         <Bookmark width={18} height={18} />
         <span className="hidden sm:inline">{label}</span>
