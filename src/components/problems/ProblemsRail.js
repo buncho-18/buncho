@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bookmark, Book, Code, Database, Grid, Users, FileText } from '../icons';
+import { Book, Code, Database, Grid, Users, FileText } from '../icons';
+import SavedPopup from '../saved/SavedPopup';
 
 const ICONS = { ai: Book, hr: Users, sql: Database, core: Code };
 
@@ -16,7 +17,7 @@ const ICONS = { ai: Book, hr: Users, sql: Database, core: Code };
  */
 const SHORTCUTS = [
   { href: '/dashboard', label: 'Dashboard', Icon: Grid },
-  { href: '/dashboard#saved', label: 'Saved for later', Icon: Bookmark },
+  { href: '/dashboard#saved', label: 'Saved for later', saved: true },
   { href: '/jobs', label: 'Job prep', Icon: FileText },
 ];
 
@@ -63,11 +64,15 @@ export default function ProblemsRail({ items, section }) {
 
         <span aria-hidden="true" className="my-1 h-px w-7 bg-line" />
 
-        {SHORTCUTS.map(({ href, label, Icon }) => (
-          <RailLink key={href} href={href} label={label}>
-            <Icon width={20} height={20} />
-          </RailLink>
-        ))}
+        {SHORTCUTS.map(({ href, label, Icon, saved }) =>
+          saved ? (
+            <SavedPopup key={href} variant="rail" label={label} />
+          ) : (
+            <RailLink key={href} href={href} label={label}>
+              <Icon width={20} height={20} />
+            </RailLink>
+          ),
+        )}
       </nav>
     </aside>
   );

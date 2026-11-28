@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import DocQuestionList from '@/components/docs/DocQuestionList';
 import ProblemsShell from '@/components/ProblemsShell';
 import { ProgressCard } from '@/components/ProblemStats';
@@ -9,7 +8,7 @@ import { isAdmin } from '@/lib/admin';
 import { CATEGORIES } from '@/lib/categories';
 import { getOrCreateUser } from '@/lib/user';
 import { getLiveAds } from '@/lib/ads';
-import { Bookmark } from '@/components/icons';
+import SavedPopup from '@/components/saved/SavedPopup';
 import JsonLd from '@/components/JsonLd';
 import { buildMetadata, collectionPageJsonLd, breadcrumbJsonLd, graph, hasActiveFilters } from '@/lib/seo';
 
@@ -109,17 +108,7 @@ export default async function CategoryPage({ category, searchParams }) {
         <div className="min-w-0 flex-1">
           <PacePlanner remaining={Math.max(0, stats.total - stats.solved)} total={stats.total} signedIn={Boolean(user)} />
         </div>
-        {user && (
-          <Link
-            href="/dashboard#saved"
-            aria-label="Saved for later"
-            title="Saved for later"
-            className="flex w-12 shrink-0 items-center justify-center rounded-2xl border border-line bg-surface text-sm font-medium transition-colors hover:border-muted sm:w-auto sm:gap-2 sm:px-4"
-          >
-            <Bookmark width={18} height={18} />
-            <span className="hidden sm:inline">Saved for later</span>
-          </Link>
-        )}
+        {user && <SavedPopup variant="bar" />}
       </div>
 
       <section aria-label="Your stats" className="mt-3 grid grid-cols-1 gap-3 sm:mt-4 sm:gap-4 md:grid-cols-[2fr_3fr]">
